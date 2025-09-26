@@ -147,8 +147,7 @@
               "cn_domain",
               "apple_domain",
               "google_domain",
-              "telegram_domain",
-              "netflix_domain"
+              "telegram_domain"
             ]
           }
         ],
