@@ -31,12 +31,6 @@
         "domain_resolver": {
           "server": "default-dns"
         }
-      },
-      {
-        "tag": "fakeip",
-        "type": "fakeip",
-        "inet4_range": "198.18.0.0/15",
-        "inet6_range": "fc00::/18"
       }
     ],
     "rules": [
@@ -53,36 +47,35 @@
       {
         "clash_mode": "Global",
         "action": "route",
-        "server": "fakeip"
+        "server": "google"
       },
       {
         "query_type": "HTTPS",
         "action": "reject"
       },
       {
-        "query_type": [
-          "A",
-          "AAAA"
-        ],
-        "action": "route",
-        "server": "fakeip",
-        "rewrite_ttl": 1
-      },
-      {
         "rule_set": [
-          "cn_domain",
           "aws_domain",
           "oracle_domain"
         ],
         "action": "route",
         "server": "ali"
+      },
+      {
+        "rule_set": [
+          "proxy_domain"
+        ],
+        "action": "route",
+        "server": "google"
       }
     ],
-    "final": "google",
-    "independent_cache": true
+    "final": "ali"
   },
   "route": {
+    "final": "final",
+    "auto_detect_interface": true,
     "default_domain_resolver": {
+      "action": "resolve",
       "server": "ali"
     },
     "rules": [
@@ -135,37 +128,6 @@
         "outbound": "ai"
       },
       {
-        "type": "logical",
-        "mode": "and",
-        "rules": [
-          {
-            "rule_set": "proxy_domain"
-          },
-          {
-            "invert": true,
-            "rule_set": [
-              "cn_domain",
-              "apple_domain",
-              "google_domain",
-              "telegram_domain"
-            ]
-          }
-        ],
-        "action": "route",
-        "outbound": "proxy"
-      },
-      {
-        "action": "resolve"
-      },
-      {
-        "rule_set": [
-          "telegram_ip",
-          "telegram_domain"
-        ],
-        "action": "route",
-        "outbound": "telegram"
-      },
-      {
         "rule_set": [
           "google_ip",
           "google_domain"
@@ -184,11 +146,10 @@
       },
       {
         "rule_set": [
-          "cn_ip",
-          "cn_domain"
+          "microsoft_domain"
         ],
         "action": "route",
-        "outbound": "direct"
+        "outbound": "microsoft"
       },
       {
         "rule_set": [
@@ -204,6 +165,21 @@
         ],
         "action": "route",
         "outbound": "us-bank"
+      },
+      {
+        "rule_set": [
+          "telegram_ip",
+          "telegram_domain"
+        ],
+        "action": "route",
+        "outbound": "telegram"
+      },
+      {
+        "rule_set": [
+          "proxy_domain"
+        ],
+        "action": "route",
+        "outbound": "proxy"
       }
     ],
     "rule_set": [
@@ -226,20 +202,6 @@
         "type": "remote",
         "format": "binary",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo-lite/geosite/apple.srs",
-        "download_detour": "direct"
-      },
-      {
-        "tag": "cn_ip",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo/geoip/cn.srs",
-        "download_detour": "direct"
-      },
-      {
-        "tag": "cn_domain",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo/geosite/geolocation-cn.srs",
         "download_detour": "direct"
       },
       {
@@ -326,9 +288,7 @@
         "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/aws.srs",
         "download_detour": "direct"
       }
-    ],
-    "final": "final",
-    "auto_detect_interface": true
+    ]
   },
   "outbounds": [
     {
@@ -374,6 +334,27 @@
     },
     {
       "tag": "apple",
+      "type": "selector",
+      "outbounds": [
+        "proxy",
+        "direct",
+        "hk",
+        "hk-auto",
+        "tw",
+        "tw-auto",
+        "jp",
+        "jp-auto",
+        "sg",
+        "sg-auto",
+        "us",
+        "us-auto",
+        "all",
+        "all-auto"
+      ],
+      "default": "all-auto"
+    },
+    {
+      "tag": "microsoft",
       "type": "selector",
       "outbounds": [
         "proxy",
@@ -645,7 +626,7 @@
     },
     "cache_file": {
       "enabled": true,
-      "store_fakeip": true
+			"store_rdrc": true
     }
   },
   "log": {
