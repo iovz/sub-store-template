@@ -370,7 +370,7 @@
         "all",
         "all-auto"
       ],
-      "default": "proxy"
+      "default": "us-auto"
     },
     {
       "tag": "apple",
@@ -391,7 +391,7 @@
         "all",
         "all-auto"
       ],
-      "default": "direct"
+      "default": "all-auto"
     },
     {
       "tag": "telegram",
