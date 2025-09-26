@@ -2,15 +2,35 @@
   "dns": {
     "servers": [
       {
+        "tag": "default-dns",
+        "type": "udp",
+        "server": "223.5.5.5"
+      },
+      {
         "tag": "google",
         "type": "https",
-        "server": "8.8.8.8",
+        "server": "dns.google",
+        "domain_resolver": {
+          "server": "default-dns"
+        },
+        "detour": "proxy"
+      },
+      {
+        "tag": "cloudflare",
+        "type": "https",
+        "server": "cloudflare-dns.com",
+        "domain_resolver": {
+          "server": "default-dns"
+        },
         "detour": "proxy"
       },
       {
         "tag": "ali",
-        "type": "https",
-        "server": "223.5.5.5"
+        "type": "quic",
+        "server": "650971-sf4hbw0t7z6xpey2.alidns.com",
+        "domain_resolver": {
+          "server": "default-dns"
+        }
       },
       {
         "tag": "fakeip",
@@ -20,6 +40,11 @@
       }
     ],
     "rules": [
+      {
+        "rule_set": "ad_domain",
+        "action": "reject",
+        "method": "default"
+      },
       {
         "clash_mode": "Direct",
         "action": "route",
@@ -44,7 +69,11 @@
         "rewrite_ttl": 1
       },
       {
-        "rule_set": "cn_domain",
+        "rule_set": [
+          "cn_domain",
+          "aws_domain",
+          "oracle_domain"
+        ],
         "action": "route",
         "server": "ali"
       }
@@ -96,32 +125,14 @@
         "outbound": "direct"
       },
       {
-        "rule_set": "bilibili_domain",
-        "action": "route",
-        "outbound": "bilibili"
-      },
-      {
-        "rule_set": [
-          "netflix_ip",
-          "netflix_domain"
-        ],
-        "action": "route",
-        "outbound": "netflix"
-      },
-      {
-        "rule_set": "bahamut_domain",
-        "action": "route",
-        "outbound": "bahamut"
-      },
-      {
         "rule_set": "youtube_domain",
         "action": "route",
         "outbound": "youtube"
       },
       {
-        "rule_set": "openai_domain",
+        "rule_set": "ai_domain",
         "action": "route",
-        "outbound": "openai"
+        "outbound": "ai"
       },
       {
         "type": "logical",
@@ -165,6 +176,7 @@
       },
       {
         "rule_set": [
+          "apple_intelligence_domain",
           "apple_ip",
           "apple_domain"
         ],
@@ -177,10 +189,32 @@
           "cn_domain"
         ],
         "action": "route",
+        "outbound": "direct"
+      },
+      {
+        "rule_set": [
+          "aws_domain",
+          "oracle_domain"
+        ],
+        "action": "route",
         "outbound": "cn"
+      },
+      {
+        "rule_set": [
+          "paypal_domain"
+        ],
+        "action": "route",
+        "outbound": "us-bank"
       }
     ],
     "rule_set": [
+      {
+        "tag": "apple_intelligence_domain",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/apple-intelligence.srs",
+        "download_detour": "direct"
+      },
       {
         "tag": "apple_ip",
         "type": "remote",
@@ -196,20 +230,6 @@
         "download_detour": "direct"
       },
       {
-        "tag": "bahamut_domain",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo-lite/geosite/bahamut.srs",
-        "download_detour": "direct"
-      },
-      {
-        "tag": "bilibili_domain",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo-lite/geosite/bilibili.srs",
-        "download_detour": "direct"
-      },
-      {
         "tag": "cn_ip",
         "type": "remote",
         "format": "binary",
@@ -220,7 +240,7 @@
         "tag": "cn_domain",
         "type": "remote",
         "format": "binary",
-        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo-lite/geosite/cn.srs",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo/geosite/geolocation-cn.json.srs",
         "download_detour": "direct"
       },
       {
@@ -238,24 +258,10 @@
         "download_detour": "direct"
       },
       {
-        "tag": "netflix_ip",
+        "tag": "ai_domain",
         "type": "remote",
         "format": "binary",
-        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo-lite/geoip/netflix.srs",
-        "download_detour": "direct"
-      },
-      {
-        "tag": "netflix_domain",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo-lite/geosite/netflix.srs",
-        "download_detour": "direct"
-      },
-      {
-        "tag": "openai_domain",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo/geosite/openai.srs",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo/geosite/category-ai-!cn.srs",
         "download_detour": "direct"
       },
       {
@@ -284,6 +290,41 @@
         "type": "remote",
         "format": "binary",
         "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo-lite/geosite/youtube.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "ad_domain",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://anti-ad.net/anti-ad-sing-box.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "microsoft_domain",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/microsoft.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "paypal_domain",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/paypal.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "oracle_domain",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/oracle.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "aws_domain",
+        "type": "remote",
+        "format": "binary",
+        "url": "https://ghfast.top/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/sing/geo/geosite/aws.srs",
         "download_detour": "direct"
       }
     ],
@@ -375,69 +416,6 @@
       "default": "proxy"
     },
     {
-      "tag": "bilibili",
-      "type": "selector",
-      "outbounds": [
-        "proxy",
-        "direct",
-        "hk",
-        "hk-auto",
-        "tw",
-        "tw-auto",
-        "jp",
-        "jp-auto",
-        "sg",
-        "sg-auto",
-        "us",
-        "us-auto",
-        "all",
-        "all-auto"
-      ],
-      "default": "direct"
-    },
-    {
-      "tag": "netflix",
-      "type": "selector",
-      "outbounds": [
-        "proxy",
-        "direct",
-        "hk",
-        "hk-auto",
-        "tw",
-        "tw-auto",
-        "jp",
-        "jp-auto",
-        "sg",
-        "sg-auto",
-        "us",
-        "us-auto",
-        "all",
-        "all-auto"
-      ],
-      "default": "proxy"
-    },
-    {
-      "tag": "bahamut",
-      "type": "selector",
-      "outbounds": [
-        "proxy",
-        "direct",
-        "hk",
-        "hk-auto",
-        "tw",
-        "tw-auto",
-        "jp",
-        "jp-auto",
-        "sg",
-        "sg-auto",
-        "us",
-        "us-auto",
-        "all",
-        "all-auto"
-      ],
-      "default": "proxy"
-    },
-    {
       "tag": "youtube",
       "type": "selector",
       "outbounds": [
@@ -459,7 +437,7 @@
       "default": "proxy"
     },
     {
-      "tag": "openai",
+      "tag": "ai",
       "type": "selector",
       "outbounds": [
         "proxy",
@@ -478,6 +456,17 @@
         "all-auto"
       ],
       "default": "proxy"
+    },
+    {
+      "tag": "us-bank",
+      "type": "selector",
+      "outbounds": [
+        "proxy",
+        "direct",
+        "us",
+        "us-auto"
+      ],
+      "default": "us-auto"
     },
     {
       "tag": "cn",
@@ -519,7 +508,7 @@
         "all",
         "all-auto"
       ],
-      "default": "proxy"
+      "default": "direct"
     },
     {
       "tag": "hk",
@@ -556,48 +545,48 @@
       "type": "urltest",
       "outbounds": [],
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "1m",
-      "tolerance": 50
+      "interval": "10m",
+      "tolerance": 30
     },
     {
       "tag": "tw-auto",
       "type": "urltest",
       "outbounds": [],
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "1m",
-      "tolerance": 50
+      "interval": "10m",
+      "tolerance": 30
     },
     {
       "tag": "jp-auto",
       "type": "urltest",
       "outbounds": [],
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "1m",
-      "tolerance": 50
+      "interval": "10m",
+      "tolerance": 30
     },
     {
       "tag": "sg-auto",
       "type": "urltest",
       "outbounds": [],
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "1m",
-      "tolerance": 50
+      "interval": "10m",
+      "tolerance": 30
     },
     {
       "tag": "us-auto",
       "type": "urltest",
       "outbounds": [],
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "1m",
-      "tolerance": 50
+      "interval": "10m",
+      "tolerance": 30
     },
     {
       "tag": "all-auto",
       "type": "urltest",
       "outbounds": [],
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "1m",
-      "tolerance": 50
+      "interval": "10m",
+      "tolerance": 30
     },
     {
       "tag": "GLOBAL",
@@ -662,7 +651,7 @@
   },
   "log": {
     "disabled": false,
-    "level": "info",
+    "level": "warn",
     "timestamp": true
   }
 }
