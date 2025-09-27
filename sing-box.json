@@ -50,10 +50,6 @@
         "server": "google"
       },
       {
-        "query_type": "HTTPS",
-        "action": "reject"
-      },
-      {
         "rule_set": [
           "aws_domain",
           "oracle_domain"
@@ -601,6 +597,7 @@
         "172.19.0.0/30",
         "fdfe:dcba:9876::0/126"
       ],
+			"mtu": 9000,
       "stack": "mixed",
       "auto_route": true,
       "auto_redirect": true,
@@ -614,8 +611,9 @@
     },
     {
       "type": "mixed",
-      "listen": "127.0.0.1",
-      "listen_port": 7890
+			"listen": "::",
+      "listen_port": 7890,
+			"set_system_proxy": false
     }
   ],
   "experimental": {
@@ -627,6 +625,7 @@
     },
     "cache_file": {
       "enabled": true,
+			"path": "/var/run/sing-box/cache.db",
       "store_rdrc": true
     }
   },
