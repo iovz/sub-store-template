@@ -603,6 +603,7 @@
       ],
       "stack": "mixed",
       "auto_route": true,
+      "auto_redirect": true,
       "platform": {
         "http_proxy": {
           "enabled": true,
@@ -632,6 +633,7 @@
   "log": {
     "disabled": false,
     "level": "warn",
+		"output": "/var/log/sing-box.log",
     "timestamp": true
   }
 }
