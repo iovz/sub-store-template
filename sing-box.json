@@ -617,7 +617,7 @@
     },
     "cache_file": {
       "enabled": true,
-			"store_rdrc": true
+      "store_rdrc": true
     }
   },
   "log": {
