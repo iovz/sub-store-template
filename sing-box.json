@@ -627,13 +627,13 @@
     },
     "cache_file": {
       "enabled": true,
-			"store_rdrc": true
+      "store_rdrc": true
     }
   },
   "log": {
     "disabled": false,
     "level": "warn",
-		"output": "/var/log/sing-box.log",
+    "output": "/var/log/sing-box.log",
     "timestamp": true
   }
 }
