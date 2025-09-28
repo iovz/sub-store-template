@@ -340,7 +340,7 @@
         "all",
         "all-auto"
       ],
-      "default": "all-auto"
+      "default": "proxy"
     },
     {
       "tag": "microsoft",
@@ -361,7 +361,7 @@
         "all",
         "all-auto"
       ],
-      "default": "all-auto"
+      "default": "proxy"
     },
     {
       "tag": "telegram",
